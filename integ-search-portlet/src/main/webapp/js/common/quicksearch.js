@@ -218,7 +218,8 @@ window.initQuickSearch = function initQuickSearch(portletId,seeAllMsg, noResultM
         offset: 0,
         limit: QUICKSEARCH_SETTING.resultsPerPage,
         sort: "relevancy",
-        order: "desc"
+        order: "desc",
+        language: eXo.env.portal.language.replace("_","-")
       };
       
       

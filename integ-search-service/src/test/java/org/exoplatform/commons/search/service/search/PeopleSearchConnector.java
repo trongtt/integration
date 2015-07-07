@@ -29,7 +29,8 @@ public class PeopleSearchConnector extends SearchServiceConnector {
                                          int offset,
                                          int limit,
                                          String sort,
-                                         String order) {
+                                         String order,
+                                         String language) {
     List<SearchResult> results = new ArrayList<SearchResult>(); 
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy/mm/dd");
     

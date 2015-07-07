@@ -374,7 +374,8 @@ window.initSearch = function initSearch(resultsPerPage,searchTypes,searchCurrent
         offset: SERVER_OFFSET,
         limit: LIMIT,
         sort: sort,
-        order: order
+        order: order,
+        language: eXo.env.portal.language.replace("_","-")
       };
 
       $.getJSON("/rest/search", searchParams, function(resultMap){

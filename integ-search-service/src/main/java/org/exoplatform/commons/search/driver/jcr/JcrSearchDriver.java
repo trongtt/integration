@@ -26,7 +26,7 @@ public class JcrSearchDriver extends SearchService {
     this.specialCharacters = initParams.get("exo.search.excluded-characters").toString();
   }
     @Override
-    public Map<String, Collection<SearchResult>> search(SearchContext context, String query, Collection<String> sites, Collection<String> types, int offset, int limit, String sort, String order) {
+    public Map<String, Collection<SearchResult>> search(SearchContext context, String query, Collection<String> sites, Collection<String> types, int offset, int limit, String sort, String order, String language) {
         String fuzzySyntax = getFuzzySyntax();
       query = replaceSpecialCharacters(query);
         HashMap<String, ArrayList<String>> terms = parse(query); //parse query for single and quoted terms
@@ -40,7 +40,7 @@ public class JcrSearchDriver extends SearchService {
             if(!types.contains("all") && !types.contains(connector.getSearchType())) continue; //search requested types only
             LOG.debug("\n[UNIFIED SEARCH]: connector = " + connector.getClass().getSimpleName());
             try {
-                results.put(connector.getSearchType(), connector.search(context, query, sites, offset, limit, sort, order));
+                results.put(connector.getSearchType(), connector.search(context, query, sites, offset, limit, sort, order, language));
             } catch (Exception e) {
                 LOG.error(e.getMessage(), e);
                 continue; //skip this connector and continue searching with the others

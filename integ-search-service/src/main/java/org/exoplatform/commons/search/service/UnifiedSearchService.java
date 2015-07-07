@@ -137,7 +137,8 @@ public class UnifiedSearchService implements ResourceContainer {
       @QueryParam("offset") @DefaultValue("0") String sOffset, 
       @QueryParam("limit") String sLimit, 
       @QueryParam("sort") @DefaultValue("relevancy") String sort, 
-      @QueryParam("order") @DefaultValue("desc") String order) 
+      @QueryParam("order") @DefaultValue("desc") String order,
+      @QueryParam("language") @DefaultValue("en") String language)
   {
     try {
       MultivaluedMap<String, String> queryParams = uriInfo.getQueryParameters();
@@ -158,7 +159,7 @@ public class UnifiedSearchService implements ResourceContainer {
       int offset = Integer.parseInt(sOffset);
       int limit = isAnonymous||null==sLimit||sLimit.isEmpty() ? (int)searchSetting.getResultsPerPage() : Integer.parseInt(sLimit);
 
-      Map<String, Collection<SearchResult>> results = searchService.search(context, query, sites, types, offset, limit, sort, order);
+      Map<String, Collection<SearchResult>> results = searchService.search(context, query, sites, types, offset, limit, sort, order,language);
       
       // get the base URI - http://<host>:<port>
       String baseUri = uriInfo.getBaseUri().toString(); // http://<host>:<port>/rest      
