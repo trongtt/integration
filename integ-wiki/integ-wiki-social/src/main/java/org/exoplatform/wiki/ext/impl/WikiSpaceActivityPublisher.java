@@ -93,10 +93,11 @@ public class WikiSpaceActivityPublisher extends PageWikiListener {
     Node node = page.getJCRPageNode();
     ExoSocialActivity activity = null;
     boolean isNewActivity = false;
+    String nodeActivityID = "";
     ActivityManager activityManager = (ActivityManager) PortalContainer.getInstance().getComponentInstanceOfType(ActivityManager.class);
     if (node.isNodeType(ActivityTypeUtils.EXO_ACTIVITY_INFO)) {
       try {
-        String nodeActivityID = node.getProperty(ActivityTypeUtils.EXO_ACTIVITY_ID).getString();
+        nodeActivityID = node.getProperty(ActivityTypeUtils.EXO_ACTIVITY_ID).getString();
         activity = activityManager.getActivity(nodeActivityID);
         isNewActivity = false;
       } catch (Exception e) {
@@ -108,6 +109,14 @@ public class WikiSpaceActivityPublisher extends PageWikiListener {
       if (page.isMinorEdit()) {
         return null;
       }
+      activity = createNewActivity(ownerIdentity.getId());
+      isNewActivity = true;
+    }
+    
+    if(MOVE_PAGE_TYPE.equals(activityType)) {
+      //Delete activity of old location
+      activityManager.deleteActivity(nodeActivityID);
+      //Add new activity of new location
       activity = createNewActivity(ownerIdentity.getId());
       isNewActivity = true;
     }
@@ -141,12 +150,9 @@ public class WikiSpaceActivityPublisher extends PageWikiListener {
     activity.setTemplateParams(templateParams);
     
     // Save activity
-    if (isNewActivity) {
+    if (isNewActivity || MOVE_PAGE_TYPE.equals(activityType)) {
       activityManager.saveActivityNoReturn(ownerStream, activity);
     } else {
-      if (MOVE_PAGE_TYPE.equals(activityType)) {
-        activity.setStreamOwner(ownerStream.getRemoteId());
-      }
       activityManager.updateActivity(activity);
     }
     
