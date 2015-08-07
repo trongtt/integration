@@ -1,7 +1,9 @@
 package org.exoplatform.wiki.ext.impl;
 
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.text.MessageFormat;
 import java.util.Map;
 import java.util.MissingResourceException;
@@ -146,9 +148,13 @@ public class WikiUIActivity extends BaseUIActivity {
     
     StringBuffer sb = new StringBuffer("");
     if (space != null) {
-      sb.append(org.exoplatform.social.webui.Utils.getSpaceHomeURL(space))
-        .append("/" + WikiSpaceActivityPublisher.WIKI_PAGE_NAME + "/")
-        .append(pageId);
+      try {
+        sb.append(org.exoplatform.social.webui.Utils.getSpaceHomeURL(space))
+          .append("/" + WikiSpaceActivityPublisher.WIKI_PAGE_NAME + "/")
+          .append(URLEncoder.encode(pageId, "UTF-8"));
+      } catch (UnsupportedEncodingException e) {
+        LOG.info("Failed to encode "+pageId, e);
+      }
     }
     
     return sb.toString();
