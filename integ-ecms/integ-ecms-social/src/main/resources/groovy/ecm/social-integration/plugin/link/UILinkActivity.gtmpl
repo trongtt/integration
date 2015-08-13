@@ -200,13 +200,10 @@
 					  String linkSource = uicomponent.getLinkSource();
 				   	  String linkTitle = uicomponent.getLinkTitle();
 					  if (linkTitle.equals("")) {
-					    linkTitle = UILinkUtil.simpleEscapeHtml(linkSource);
+					    linkTitle = linkSource;
 					  }
 					  String linkImage = uicomponent.getLinkImage();
-					  String linkDescription = UILinkUtil.simpleEscapeHtml(uicomponent.getLinkDescription());
-					  //
-					  linkTitle = UILinkUtil.simpleEscapeHtml(Util.getDecodeQueryURL(linkTitle));
-					  linkSource = UILinkUtil.simpleEscapeHtml(Util.getDecodeQueryURL(linkSource));
+					  String linkDescription = uicomponent.getLinkDescription();
 					  //
 					  def linkComment = uicomponent.getLinkComment();
 					  def linkClass = "content";
