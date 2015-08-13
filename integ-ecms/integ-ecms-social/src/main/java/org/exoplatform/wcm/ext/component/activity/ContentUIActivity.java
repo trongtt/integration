@@ -80,7 +80,7 @@ public class ContentUIActivity extends BaseUIActivity {
 
   public static final String CONTENT_LINK       = "contenLink";
 
-  public static final String MESSAGE            = "message";
+  public static final String MESSAGE            = "MESSAGE";
 
   public static final String REPOSITORY         = "repository";
 
@@ -340,9 +340,10 @@ public class ContentUIActivity extends BaseUIActivity {
         return contentNode.getPrimaryNodeType().getName().replaceAll(":", "_");
       } catch (RepositoryException e) {
           LOG.info("Cannot get content node");
+          return "uiIcon64x64Templatent_file uiIcon64x64nt_file";
       }
     }
-    return "";
+    return "uiIcon64x64Templatent_file uiIcon64x64nt_file";
   }
 
   public void setUIActivityData(Map<String, String> activityParams) {
