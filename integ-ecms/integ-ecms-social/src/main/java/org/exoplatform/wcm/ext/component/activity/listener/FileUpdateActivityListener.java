@@ -118,7 +118,8 @@ public class FileUpdateActivityListener extends Listener<Node, String> {
     String newValue = newValueBuilder.toString().trim();
     String oldValue = oldValueBuilder.toString().trim();
     String commentValue = commentValueBuilder.toString().trim();
-    
+
+    if (!(oldValue.length() == 0 && newValue.length() == oldValue.length())) {
     if(currentNode.isNodeType(NodetypeConstant.NT_RESOURCE)) currentNode = currentNode.getParent();
     String resourceBundle = "";
     boolean hit = false;
@@ -277,4 +278,5 @@ public class FileUpdateActivityListener extends Listener<Node, String> {
     	Utils.postFileActivity(currentNode, resourceBundle, false, true, commentValue);
     }
   }
+}
 }
