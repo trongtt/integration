@@ -69,283 +69,283 @@ import org.exoplatform.web.controller.router.Router;
 @Path("/search")
 @Produces(MediaType.APPLICATION_JSON)
 public class UnifiedSearchService implements ResourceContainer {
-  private final static Log LOG = ExoLogger.getLogger(UnifiedSearchService.class);
-  
-  private static final CacheControl cacheControl;
-  static {
-    RuntimeDelegate.setInstance(new RuntimeDelegateImpl());
-    cacheControl = new CacheControl();
-    cacheControl.setNoCache(true);
-    cacheControl.setNoStore(true);    
-  }
-  
-  private static SearchSetting defaultSearchSetting = new SearchSetting(10, Arrays.asList("all"), false, false, false);
-  private static SearchSetting anonymousSearchSetting = new SearchSetting(10, Arrays.asList("page", "file", "document", "post"), true, false, true);
-  private static SearchSetting defaultQuicksearchSetting = new SearchSetting(5, Arrays.asList("all"), true, true, true);
-  
-  private SearchService searchService;
-  private UserPortalConfigService userPortalConfigService;
-  private SettingService settingService;
-  private Router router;
-  
-  /**
-   * A constructor creates a instance of unified search service with the specified parameters
-   * @param searchService a service to work with other connectors
-   * @param settingService a service to store and get the setting values 
-   * @param userPortalConfigService a service to get user information from portal
-   * @param webAppController a controller to get configuration path
-   * @format json
-   * @LevelAPI Experimental
-   */
-  public UnifiedSearchService(SearchService searchService, SettingService settingService, UserPortalConfigService userPortalConfigService, WebAppController webAppController){
-    this.searchService = searchService;
-    this.settingService = settingService;
-    this.userPortalConfigService = userPortalConfigService;
-    
-    try {
-      File controllerXml = new File(webAppController.getConfigurationPath());
-      URL url = controllerXml.toURI().toURL();
-      ControllerDescriptor routerDesc = new DescriptorBuilder().build(url.openStream());
-      this.router = new Router(routerDesc);
-    } catch (Exception e) {
-      LOG.error(e.getMessage(), e);
+    private final static Log LOG = ExoLogger.getLogger(UnifiedSearchService.class);
+
+    private static final CacheControl cacheControl;
+    static {
+        RuntimeDelegate.setInstance(new RuntimeDelegateImpl());
+        cacheControl = new CacheControl();
+        cacheControl.setNoCache(true);
+        cacheControl.setNoStore(true);
     }
-    
-  }
-  
-  /**
-   * Searches for a query.
-   * @param context Search context
-   * @param query Searches for a query which is entered by the user.
-   * @param sSites Searches in the specified sites only (for example, ACME or Intranet).
-   * @param sTypes Searches for these specified content types only (for example, people, discussions, events, tasks, wikis, spaces, files, and documents).
-   * @param sOffset Starts the offset of the results set.
-   * @param sLimit Limit the maximum size of the results set.
-   * @param sort Defines the Sort type (relevancy, date, title).
-   * @param order Defines the Sort order (ascending, descending).
-   * @format JSON
-   * @return a map of connectors, including their search results.
-   * @LevelAPI Experimental
-   * @anchor UnifiedSearchService.search
-   */
-  @GET
-  public Response REST_search(
-      @javax.ws.rs.core.Context UriInfo uriInfo,
-      @QueryParam("q") String query, 
-      @QueryParam("sites") @DefaultValue("all") String sSites, 
-      @QueryParam("types") String sTypes, 
-      @QueryParam("offset") @DefaultValue("0") String sOffset, 
-      @QueryParam("limit") String sLimit, 
-      @QueryParam("sort") @DefaultValue("relevancy") String sort, 
-      @QueryParam("order") @DefaultValue("desc") String order) 
-  {
-    try {
-      MultivaluedMap<String, String> queryParams = uriInfo.getQueryParameters();
-      String siteName = queryParams.getFirst("searchContext[siteName]");
-      SearchContext context = new SearchContext(this.router, siteName);
-      
-      if(null==query || query.isEmpty()) return Response.ok("", MediaType.APPLICATION_JSON).cacheControl(cacheControl).build();
-  
-      String userId = ConversationState.getCurrent().getIdentity().getUserId();
-      boolean isAnonymous = null==userId || userId.isEmpty() || userId.equals("__anonim");
-      SearchSetting searchSetting = isAnonymous ? anonymousSearchSetting : getSearchSetting();
-      
-      List<String> sites = Arrays.asList(sSites.split(",\\s*"));      
-      if(sites.contains("all")) sites = userPortalConfigService.getAllPortalNames(); 
-      
-      List<String> types = isAnonymous||null==sTypes ? searchSetting.getSearchTypes() : Arrays.asList(sTypes.split(",\\s*"));
-      
-      int offset = Integer.parseInt(sOffset);
-      int limit = isAnonymous||null==sLimit||sLimit.isEmpty() ? (int)searchSetting.getResultsPerPage() : Integer.parseInt(sLimit);
 
-      Map<String, Collection<SearchResult>> results = searchService.search(context, query, sites, types, offset, limit, sort, order);
-      
-      // get the base URI - http://<host>:<port>
-      String baseUri = uriInfo.getBaseUri().toString(); // http://<host>:<port>/rest      
-      baseUri = baseUri.substring(0,baseUri.lastIndexOf((new URL(baseUri)).getPath()));
-      String resultUrl, imageUrl;      
-      
-      // use absolute path for URLs in search results
-      for(Collection<SearchResult> connectorResults:results.values()){
-        for(SearchResult result:connectorResults){
-          resultUrl = result.getUrl();
-          imageUrl =  result.getImageUrl();
-          if(null!=resultUrl && resultUrl.startsWith("/")) result.setUrl(baseUri + resultUrl);
-          if(null!=imageUrl && imageUrl.startsWith("/")) result.setImageUrl(baseUri + imageUrl);          
-        }        
-      }
-      
-      return Response.ok(results, MediaType.APPLICATION_JSON).cacheControl(cacheControl).build();
-    } catch (Exception e) {
-      LOG.error(e.getMessage(), e);
-      return Response.serverError().status(Response.Status.INTERNAL_SERVER_ERROR).entity(e).cacheControl(cacheControl).build();
+    private static SearchSetting defaultSearchSetting = new SearchSetting(10, Arrays.asList("all"), false, false, false);
+    private static SearchSetting anonymousSearchSetting = new SearchSetting(10, Arrays.asList("page", "file", "document", "post"), true, false, true);
+    private static SearchSetting defaultQuicksearchSetting = new SearchSetting(5, Arrays.asList("all"), true, true, true);
+
+    private SearchService searchService;
+    private UserPortalConfigService userPortalConfigService;
+    private SettingService settingService;
+    private Router router;
+
+    /**
+     * A constructor creates a instance of unified search service with the specified parameters
+     * @param searchService a service to work with other connectors
+     * @param settingService a service to store and get the setting values
+     * @param userPortalConfigService a service to get user information from portal
+     * @param webAppController a controller to get configuration path
+     * @format json
+     * @LevelAPI Experimental
+     */
+    public UnifiedSearchService(SearchService searchService, SettingService settingService, UserPortalConfigService userPortalConfigService, WebAppController webAppController){
+        this.searchService = searchService;
+        this.settingService = settingService;
+        this.userPortalConfigService = userPortalConfigService;
+
+        try {
+            File controllerXml = new File(webAppController.getConfigurationPath());
+            URL url = controllerXml.toURI().toURL();
+            ControllerDescriptor routerDesc = new DescriptorBuilder().build(url.openStream());
+            this.router = new Router(routerDesc);
+        } catch (Exception e) {
+            LOG.error(e.getMessage(), e);
+        }
+
     }
-  }
 
-  /**
-  * Gets all connectors which are registered in the system and are enabled.
-  * @return List of connectors and names of the enabled ones.
-  * @format JSON
-  * @LevelAPI Experimental
-  * @anchor UnifiedSearchService.getRegistry
-  */    
-  @GET
-  @Path("/registry")
-  public Response REST_getRegistry() {
-    LinkedHashMap<String, SearchServiceConnector> searchConnectors = new LinkedHashMap<String, SearchServiceConnector>();
-    for(SearchServiceConnector connector:searchService.getConnectors()) {
-      searchConnectors.put(connector.getSearchType(), connector);
+    /**
+     * Searches for a query.
+     * @param context Search context
+     * @param query Searches for a query which is entered by the user.
+     * @param sSites Searches in the specified sites only (for example, ACME or Intranet).
+     * @param sTypes Searches for these specified content types only (for example, people, discussions, events, tasks, wikis, spaces, files, and documents).
+     * @param sOffset Starts the offset of the results set.
+     * @param sLimit Limit the maximum size of the results set.
+     * @param sort Defines the Sort type (relevancy, date, title).
+     * @param order Defines the Sort order (ascending, descending).
+     * @format JSON
+     * @return a map of connectors, including their search results.
+     * @LevelAPI Experimental
+     * @anchor UnifiedSearchService.search
+     */
+    @GET
+    public Response REST_search(
+            @javax.ws.rs.core.Context UriInfo uriInfo,
+            @QueryParam("q") String query,
+            @QueryParam("sites") @DefaultValue("all") String sSites,
+            @QueryParam("types") String sTypes,
+            @QueryParam("offset") @DefaultValue("0") String sOffset,
+            @QueryParam("limit") String sLimit,
+            @QueryParam("sort") @DefaultValue("relevancy") String sort,
+            @QueryParam("order") @DefaultValue("desc") String order)
+    {
+        try {
+            MultivaluedMap<String, String> queryParams = uriInfo.getQueryParameters();
+            String siteName = queryParams.getFirst("searchContext[siteName]");
+            SearchContext context = new SearchContext(this.router, siteName);
+
+            if(null==query || query.isEmpty()) return Response.ok("", MediaType.APPLICATION_JSON).cacheControl(cacheControl).build();
+
+            String userId = ConversationState.getCurrent().getIdentity().getUserId();
+            boolean isAnonymous = null==userId || userId.isEmpty() || userId.equals("__anonim");
+            SearchSetting searchSetting = isAnonymous ? anonymousSearchSetting : getSearchSetting();
+
+            List<String> sites = Arrays.asList(sSites.split(",\\s*"));
+            if(sites.contains("all")) sites = userPortalConfigService.getAllPortalNames();
+
+            List<String> types = isAnonymous||null==sTypes ? searchSetting.getSearchTypes() : Arrays.asList(sTypes.split(",\\s*"));
+
+            int offset = Integer.parseInt(sOffset);
+            int limit = isAnonymous||null==sLimit||sLimit.isEmpty() ? (int)searchSetting.getResultsPerPage() : Integer.parseInt(sLimit);
+
+            Map<String, Collection<SearchResult>> results = searchService.search(context, query, sites, types, offset, limit, sort, order);
+
+            // get the base URI - http://<host>:<port>
+            String baseUri = uriInfo.getBaseUri().toString(); // http://<host>:<port>/rest
+            baseUri = baseUri.substring(0,baseUri.lastIndexOf((new URL(baseUri)).getPath()));
+            String resultUrl, imageUrl;
+
+            // use absolute path for URLs in search results
+            for(Collection<SearchResult> connectorResults:results.values()){
+                for(SearchResult result:connectorResults){
+                    resultUrl = result.getUrl();
+                    imageUrl =  result.getImageUrl();
+                    if(null!=resultUrl && resultUrl.startsWith("/")) result.setUrl(baseUri + resultUrl);
+                    if(null!=imageUrl && imageUrl.startsWith("/")) result.setImageUrl(baseUri + imageUrl);
+                }
+            }
+
+            return Response.ok(results, MediaType.APPLICATION_JSON).cacheControl(cacheControl).build();
+        } catch (Exception e) {
+            LOG.error(e.getMessage(), e);
+            return Response.serverError().status(Response.Status.INTERNAL_SERVER_ERROR).entity(e).cacheControl(cacheControl).build();
+        }
     }
-    return Response.ok(Arrays.asList(searchConnectors, getEnabledSearchTypes()), MediaType.APPLICATION_JSON).cacheControl(cacheControl).build();
-  }
 
-  
-  /**
-  * Gets all available sites in the system.
-  * @return a list of site names
-  * @format JSON
-  * @LevelAPI Experimental
-  * @anchor UnifiedSearchService.getSites
-  */  
-  @GET
-  @Path("/sites")
-  public Response REST_getSites() {
-    try {
-      return Response.ok(userPortalConfigService.getAllPortalNames(), MediaType.APPLICATION_JSON).cacheControl(cacheControl).build();
-    } catch (Exception e) {
-      LOG.error(e.getMessage(), e);
-      return Response.serverError().status(Response.Status.INTERNAL_SERVER_ERROR).entity(e).cacheControl(cacheControl).build();
+    /**
+     * Gets all connectors which are registered in the system and are enabled.
+     * @return List of connectors and names of the enabled ones.
+     * @format JSON
+     * @LevelAPI Experimental
+     * @anchor UnifiedSearchService.getRegistry
+     */
+    @GET
+    @Path("/registry")
+    public Response REST_getRegistry() {
+        LinkedHashMap<String, SearchServiceConnector> searchConnectors = new LinkedHashMap<String, SearchServiceConnector>();
+        for(SearchServiceConnector connector:searchService.getConnectors()) {
+            searchConnectors.put(connector.getSearchType(), connector);
+        }
+        return Response.ok(Arrays.asList(searchConnectors, getEnabledSearchTypes()), MediaType.APPLICATION_JSON).cacheControl(cacheControl).build();
     }
-  }
 
-    
-  @SuppressWarnings("unchecked")
-  private SearchSetting getSearchSetting() {
-    try {
-      Long resultsPerPage = ((SettingValue<Long>)settingService.get(Context.USER, Scope.WINDOWS, "resultsPerPage")).getValue();
-      String searchTypes = ((SettingValue<String>) settingService.get(Context.USER, Scope.WINDOWS, "searchTypes")).getValue();      
-      Boolean searchCurrentSiteOnly = ((SettingValue<Boolean>) settingService.get(Context.USER, Scope.WINDOWS, "searchCurrentSiteOnly")).getValue();
-      Boolean hideSearchForm = ((SettingValue<Boolean>) settingService.get(Context.USER, Scope.WINDOWS, "hideSearchForm")).getValue();
-      Boolean hideFacetsFilter = ((SettingValue<Boolean>) settingService.get(Context.USER, Scope.WINDOWS, "hideFacetsFilter")).getValue();
-      
-      return new SearchSetting(resultsPerPage, Arrays.asList(searchTypes.split(",\\s*")), searchCurrentSiteOnly, hideSearchForm, hideFacetsFilter);
-    } catch (Exception e) {
-      return defaultSearchSetting;
+
+    /**
+     * Gets all available sites in the system.
+     * @return a list of site names
+     * @format JSON
+     * @LevelAPI Experimental
+     * @anchor UnifiedSearchService.getSites
+     */
+    @GET
+    @Path("/sites")
+    public Response REST_getSites() {
+        try {
+            return Response.ok(userPortalConfigService.getAllPortalNames(), MediaType.APPLICATION_JSON).cacheControl(cacheControl).build();
+        } catch (Exception e) {
+            LOG.error(e.getMessage(), e);
+            return Response.serverError().status(Response.Status.INTERNAL_SERVER_ERROR).entity(e).cacheControl(cacheControl).build();
+        }
     }
-  }
-
-  /**
-  * Gets current user's search settings.
-  * @return search settings of the current logging in (or anonymous) user
-  * @format JSON
-  * @LevelAPI Experimental
-  * @anchor UnifiedSearchService.getSearchSetting
-  */    
-  @GET
-  @Path("/setting")
-  public Response REST_getSearchSetting() {
-    String userId = ConversationState.getCurrent().getIdentity().getUserId();
-    return Response.ok(userId.equals("__anonim") ? anonymousSearchSetting : getSearchSetting(), MediaType.APPLICATION_JSON).cacheControl(cacheControl).build();
-  }
-  
-  /**
-  * Saves current user's search settings.
-  * @return "ok" when succeed
-  * @format JSON
-  * @LevelAPI Experimental
-  * @anchor UnifiedSearchService.setSearchSetting
-  */    
-  @POST
-  @Path("/setting")
-  public Response REST_setSearchSetting(@FormParam("resultsPerPage") long resultsPerPage, @FormParam("searchTypes") String searchTypes, @FormParam("searchCurrentSiteOnly") boolean searchCurrentSiteOnly, @FormParam("hideSearchForm") boolean hideSearchForm, @FormParam("hideFacetsFilter") boolean hideFacetsFilter) {
-    settingService.set(Context.USER, Scope.WINDOWS, "resultsPerPage", new SettingValue<Long>(resultsPerPage));    
-    settingService.set(Context.USER, Scope.WINDOWS, "searchTypes", new SettingValue<String>(searchTypes));
-    settingService.set(Context.USER, Scope.WINDOWS, "searchCurrentSiteOnly", new SettingValue<Boolean>(searchCurrentSiteOnly));
-    settingService.set(Context.USER, Scope.WINDOWS, "hideSearchForm", new SettingValue<Boolean>(hideSearchForm));
-    settingService.set(Context.USER, Scope.WINDOWS, "hideFacetsFilter", new SettingValue<Boolean>(hideFacetsFilter));
-    
-    return Response.ok("ok", MediaType.APPLICATION_JSON).cacheControl(cacheControl).build();
-  } 
 
 
-  @SuppressWarnings("unchecked")
-  private SearchSetting getQuickSearchSetting() {
-    try {
-      Long resultsPerPage = ((SettingValue<Long>)settingService.get(Context.GLOBAL, Scope.WINDOWS, "resultsPerPage")).getValue();
-      String searchTypes = ((SettingValue<String>) settingService.get(Context.GLOBAL, Scope.WINDOWS, "searchTypes")).getValue();
-      Boolean searchCurrentSiteOnly = ((SettingValue<Boolean>) settingService.get(Context.GLOBAL, Scope.WINDOWS, "searchCurrentSiteOnly")).getValue();
-      
-      return new SearchSetting(resultsPerPage, Arrays.asList(searchTypes.split(",\\s*")), searchCurrentSiteOnly, true, true);
-    } catch (Exception e) {
-      return defaultQuicksearchSetting;
+    @SuppressWarnings("unchecked")
+    private SearchSetting getSearchSetting() {
+        try {
+            Long resultsPerPage = ((SettingValue<Long>)settingService.get(Context.USER, Scope.WINDOWS, "resultsPerPage")).getValue();
+            String searchTypes = ((SettingValue<String>) settingService.get(Context.USER, Scope.WINDOWS, "searchTypes")).getValue();
+            Boolean searchCurrentSiteOnly = ((SettingValue<Boolean>) settingService.get(Context.USER, Scope.WINDOWS, "searchCurrentSiteOnly")).getValue();
+            Boolean hideSearchForm = ((SettingValue<Boolean>) settingService.get(Context.USER, Scope.WINDOWS, "hideSearchForm")).getValue();
+            Boolean hideFacetsFilter = ((SettingValue<Boolean>) settingService.get(Context.USER, Scope.WINDOWS, "hideFacetsFilter")).getValue();
+
+            return new SearchSetting(resultsPerPage, Arrays.asList(searchTypes.split(",\\s*")), searchCurrentSiteOnly, hideSearchForm, hideFacetsFilter);
+        } catch (Exception e) {
+            return defaultSearchSetting;
+        }
     }
-  }
 
-  /**
-  * Gets current user's quick search settings.
-  * @return quick search settings of the current logging in user
-  * @format JSON
-  * @LevelAPI Experimental
-  * @anchor UnifiedSearchService.getQuicksearchSetting
-  */    
-  @GET
-  @Path("/setting/quicksearch")
-  public Response REST_getQuicksearchSetting() {
-    return Response.ok(getQuickSearchSetting(), MediaType.APPLICATION_JSON).cacheControl(cacheControl).build();
-  }
-  
-  /**
-  * Saves current user's quick search settings.
-  *
-  * @return "ok" when succeed
-  * @format JSON
-  * @LevelAPI Experimental
-  *
-  * @anchor UnifiedSearchService.setQuicksearchSetting
-  */    
-  @POST
-  @Path("/setting/quicksearch")
-  public Response REST_setQuicksearchSetting(@FormParam("resultsPerPage") long resultsPerPage, @FormParam("searchTypes") String searchTypes, @FormParam("searchCurrentSiteOnly") boolean searchCurrentSiteOnly) {
-    settingService.set(Context.GLOBAL, Scope.WINDOWS, "resultsPerPage", new SettingValue<Long>(resultsPerPage));    
-    settingService.set(Context.GLOBAL, Scope.WINDOWS, "searchTypes", new SettingValue<String>(searchTypes));
-    settingService.set(Context.GLOBAL, Scope.WINDOWS, "searchCurrentSiteOnly", new SettingValue<Boolean>(searchCurrentSiteOnly));
-    return Response.ok("ok", MediaType.APPLICATION_JSON).cacheControl(cacheControl).build();
-  } 
-  
-  
-  @SuppressWarnings("unchecked")
-  public static List<String> getEnabledSearchTypes(){
-    SettingService settingService = (SettingService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(SettingService.class);
-    SettingValue<String> enabledSearchTypes = (SettingValue<String>) settingService.get(Context.GLOBAL, Scope.APPLICATION, "enabledSearchTypes");
-    if(null!=enabledSearchTypes) return Arrays.asList(enabledSearchTypes.getValue().split(",\\s*"));
-
-    SearchService searchService = (SearchService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(SearchService.class);
-    LinkedList<String> allSearchTypes = new LinkedList<String>();
-    for(SearchServiceConnector connector:searchService.getConnectors()) {
-      allSearchTypes.add(connector.getSearchType());
+    /**
+     * Gets current user's search settings.
+     * @return search settings of the current logging in (or anonymous) user
+     * @format JSON
+     * @LevelAPI Experimental
+     * @anchor UnifiedSearchService.getSearchSetting
+     */
+    @GET
+    @Path("/setting")
+    public Response REST_getSearchSetting() {
+        String userId = ConversationState.getCurrent().getIdentity().getUserId();
+        return Response.ok(userId.equals("__anonim") ? anonymousSearchSetting : getSearchSetting(), MediaType.APPLICATION_JSON).cacheControl(cacheControl).build();
     }
-    return allSearchTypes;      
-  }
-  
-  /**
-  * Sets the "enabledSearchTypes" variable in a global context.
-  * @param searchTypes List of search types in the form of a comma-separated string.
-  * @format JSON
-  * @return "ok" if the caller's role is administrator, otherwise, returns "nok: administrators only".
-  * @LevelAPI Experimental
-  * @anchor UnifiedSearchService.setEnabledSearchtypes
-  */
-  @POST
-  @Path("/enabled-searchtypes/{searchTypes}")
-  public Response REST_setEnabledSearchtypes(@PathParam("searchTypes") String searchTypes) {
-    UserACL userAcl = (UserACL)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(UserACL.class);
-    
-    if(ConversationState.getCurrent().getIdentity().isMemberOf(userAcl.getAdminGroups())) {//only administrators can set this
-      settingService.set(Context.GLOBAL, Scope.APPLICATION, "enabledSearchTypes", new SettingValue<String>(searchTypes));      
-      return Response.ok("ok", MediaType.APPLICATION_JSON).cacheControl(cacheControl).build();
-    }
-    return Response.ok("nok: administrators only", MediaType.APPLICATION_JSON).cacheControl(cacheControl).build();
-  } 
 
-  
+    /**
+     * Saves current user's search settings.
+     * @return "ok" when succeed
+     * @format JSON
+     * @LevelAPI Experimental
+     * @anchor UnifiedSearchService.setSearchSetting
+     */
+    @POST
+    @Path("/setting")
+    public Response REST_setSearchSetting(@FormParam("resultsPerPage") long resultsPerPage, @FormParam("searchTypes") String searchTypes, @FormParam("searchCurrentSiteOnly") boolean searchCurrentSiteOnly, @FormParam("hideSearchForm") boolean hideSearchForm, @FormParam("hideFacetsFilter") boolean hideFacetsFilter) {
+        settingService.set(Context.USER, Scope.WINDOWS, "resultsPerPage", new SettingValue<Long>(resultsPerPage));
+        settingService.set(Context.USER, Scope.WINDOWS, "searchTypes", new SettingValue<String>(searchTypes));
+        settingService.set(Context.USER, Scope.WINDOWS, "searchCurrentSiteOnly", new SettingValue<Boolean>(searchCurrentSiteOnly));
+        settingService.set(Context.USER, Scope.WINDOWS, "hideSearchForm", new SettingValue<Boolean>(hideSearchForm));
+        settingService.set(Context.USER, Scope.WINDOWS, "hideFacetsFilter", new SettingValue<Boolean>(hideFacetsFilter));
+
+        return Response.ok("ok", MediaType.APPLICATION_JSON).cacheControl(cacheControl).build();
+    }
+
+
+    @SuppressWarnings("unchecked")
+    private SearchSetting getQuickSearchSetting() {
+        try {
+            Long resultsPerPage = ((SettingValue<Long>)settingService.get(Context.GLOBAL, Scope.WINDOWS, "resultsPerPage")).getValue();
+            String searchTypes = ((SettingValue<String>) settingService.get(Context.GLOBAL, Scope.WINDOWS, "searchTypes")).getValue();
+            Boolean searchCurrentSiteOnly = ((SettingValue<Boolean>) settingService.get(Context.GLOBAL, Scope.WINDOWS, "searchCurrentSiteOnly")).getValue();
+
+            return new SearchSetting(resultsPerPage, Arrays.asList(searchTypes.split(",\\s*")), searchCurrentSiteOnly, true, true);
+        } catch (Exception e) {
+            return defaultQuicksearchSetting;
+        }
+    }
+
+    /**
+     * Gets current user's quick search settings.
+     * @return quick search settings of the current logging in user
+     * @format JSON
+     * @LevelAPI Experimental
+     * @anchor UnifiedSearchService.getQuicksearchSetting
+     */
+    @GET
+    @Path("/setting/quicksearch")
+    public Response REST_getQuicksearchSetting() {
+        return Response.ok(getQuickSearchSetting(), MediaType.APPLICATION_JSON).cacheControl(cacheControl).build();
+    }
+
+    /**
+     * Saves current user's quick search settings.
+     *
+     * @return "ok" when succeed
+     * @format JSON
+     * @LevelAPI Experimental
+     *
+     * @anchor UnifiedSearchService.setQuicksearchSetting
+     */
+    @POST
+    @Path("/setting/quicksearch")
+    public Response REST_setQuicksearchSetting(@FormParam("resultsPerPage") long resultsPerPage, @FormParam("searchTypes") String searchTypes, @FormParam("searchCurrentSiteOnly") boolean searchCurrentSiteOnly) {
+        settingService.set(Context.GLOBAL, Scope.WINDOWS, "resultsPerPage", new SettingValue<Long>(resultsPerPage));
+        settingService.set(Context.GLOBAL, Scope.WINDOWS, "searchTypes", new SettingValue<String>(searchTypes));
+        settingService.set(Context.GLOBAL, Scope.WINDOWS, "searchCurrentSiteOnly", new SettingValue<Boolean>(searchCurrentSiteOnly));
+        return Response.ok("ok", MediaType.APPLICATION_JSON).cacheControl(cacheControl).build();
+    }
+
+
+    @SuppressWarnings("unchecked")
+    public static List<String> getEnabledSearchTypes(){
+        SettingService settingService = (SettingService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(SettingService.class);
+        SettingValue<String> enabledSearchTypes = (SettingValue<String>) settingService.get(Context.GLOBAL, Scope.APPLICATION, "enabledSearchTypes");
+        if(null!=enabledSearchTypes) return Arrays.asList(enabledSearchTypes.getValue().split(",\\s*"));
+
+        SearchService searchService = (SearchService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(SearchService.class);
+        LinkedList<String> allSearchTypes = new LinkedList<String>();
+        for(SearchServiceConnector connector:searchService.getConnectors()) {
+            allSearchTypes.add(connector.getSearchType());
+        }
+        return allSearchTypes;
+    }
+
+    /**
+     * Sets the "enabledSearchTypes" variable in a global context.
+     * @param searchTypes List of search types in the form of a comma-separated string.
+     * @format JSON
+     * @return "ok" if the caller's role is administrator, otherwise, returns "nok: administrators only".
+     * @LevelAPI Experimental
+     * @anchor UnifiedSearchService.setEnabledSearchtypes
+     */
+    @POST
+    @Path("/enabled-searchtypes/{searchTypes}")
+    public Response REST_setEnabledSearchtypes(@PathParam("searchTypes") String searchTypes) {
+        UserACL userAcl = (UserACL)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(UserACL.class);
+
+        if(ConversationState.getCurrent().getIdentity().isMemberOf(userAcl.getAdminGroups())) {//only administrators can set this
+            settingService.set(Context.GLOBAL, Scope.APPLICATION, "enabledSearchTypes", new SettingValue<String>(searchTypes));
+            return Response.ok("ok", MediaType.APPLICATION_JSON).cacheControl(cacheControl).build();
+        }
+        return Response.ok("nok: administrators only", MediaType.APPLICATION_JSON).cacheControl(cacheControl).build();
+    }
+
+
 }
