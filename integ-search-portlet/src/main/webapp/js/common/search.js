@@ -385,7 +385,7 @@ window.initSearch = function initSearch() {
         if(append) {
           $("#showMore").hide();
         } else {
-          clearResultPage("No result for <strong>" + XSSUtils.sanitizeString($("#txtQuery").val()) + "<strong>");
+          clearResultPage(eXo.ecm.WCMUtils.getBundle("unifiedSearch.label.NoResults" , eXo.env.portal.language)+" <strong>" + XSSUtils.sanitizeString($("#txtQuery").val()) + "<strong>");
         }
         return;
       }
