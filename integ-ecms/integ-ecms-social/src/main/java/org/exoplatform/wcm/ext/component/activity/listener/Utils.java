@@ -710,7 +710,8 @@ public class Utils {
     if (node.isNodeType(ActivityTypeUtils.EXO_ACTIVITY_INFO)) {
       try {
         nodeActivityID = node.getProperty(ActivityTypeUtils.EXO_ACTIVITY_ID).getString();
-        activityManager.deleteActivity(nodeActivityID);
+        if(activityManager.getActivity(nodeActivityID) != null)
+        	activityManager.deleteActivity(nodeActivityID);
       }catch (Exception e){
         LOG.info("No activity is deleted, return no related activity");
 
