@@ -72,7 +72,6 @@
     <dependency>
       <groupId>org.gatein.portal</groupId>
       <artifactId>exo.portal.component.resources</artifactId>
-      <scope>runtime</scope>
     </dependency>
   </dependencies>
 </project>

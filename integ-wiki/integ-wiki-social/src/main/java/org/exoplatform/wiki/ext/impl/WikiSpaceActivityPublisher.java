@@ -5,6 +5,8 @@ import org.exoplatform.container.PortalContainer;
 import org.exoplatform.portal.config.model.PortalConfig;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
+import org.exoplatform.services.resources.LocaleConfigService;
+import org.exoplatform.services.resources.ResourceBundleService;
 import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.services.security.IdentityConstants;
 import org.exoplatform.services.security.MembershipEntry;
@@ -18,7 +20,7 @@ import org.exoplatform.social.core.manager.IdentityManager;
 import org.exoplatform.social.core.space.model.Space;
 import org.exoplatform.social.core.space.spi.SpaceService;
 import org.exoplatform.social.core.storage.SpaceStorageException;
-import org.exoplatform.webui.application.WebuiRequestContext;
+import org.exoplatform.web.application.RequestContext;
 import org.exoplatform.wiki.WikiException;
 import org.exoplatform.wiki.ext.impl.WikiUIActivity.CommentType;
 import org.exoplatform.wiki.mow.api.*;
@@ -32,10 +34,7 @@ import org.exoplatform.wiki.utils.Utils;
 import org.exoplatform.wiki.utils.WikiConstants;
 import org.xwiki.rendering.syntax.Syntax;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class WikiSpaceActivityPublisher extends PageWikiListener {
   
@@ -65,12 +64,21 @@ public class WikiSpaceActivityPublisher extends PageWikiListener {
 
   private static final int   EXCERPT_LENGTH    = 140;
 
+  public static final String RESOURCE_BUNDLE_WIKI_INTEGRATION = "locale.wiki.integration.integration";
+
   private static final Log   LOG               = ExoLogger.getExoLogger(WikiSpaceActivityPublisher.class);
 
   private WikiService wikiService;
 
-  public WikiSpaceActivityPublisher(WikiService wikiService) {
+  private LocaleConfigService localeConfigService;
+
+  private ResourceBundleService resourceBundleService;
+
+  public WikiSpaceActivityPublisher(WikiService wikiService, LocaleConfigService localeConfigService,
+                                    ResourceBundleService resourceBundleService) {
     this.wikiService = wikiService;
+    this.localeConfigService = localeConfigService;
+    this.resourceBundleService = resourceBundleService;
   }
   
   private ExoSocialActivityImpl createNewActivity(String ownerId) {
@@ -320,8 +328,15 @@ public class WikiSpaceActivityPublisher extends PageWikiListener {
    * @return
    */
   private String getValueFromResourceBundle(String key, String[] params) {
-    WebuiRequestContext context = WebuiRequestContext.getCurrentInstance();
-    ResourceBundle res = context.getApplicationResourceBundle();
+    Locale locale;
+    RequestContext context = RequestContext.getCurrentInstance();
+    if(context != null) {
+      locale = context.getLocale();
+    } else {
+      locale = localeConfigService.getDefaultLocaleConfig().getLocale();
+    }
+
+    ResourceBundle res = resourceBundleService.getResourceBundle(RESOURCE_BUNDLE_WIKI_INTEGRATION, locale);
     if (res.getString(key) == null) return key;
     String value = res.getString(key);
     if (params != null) {
