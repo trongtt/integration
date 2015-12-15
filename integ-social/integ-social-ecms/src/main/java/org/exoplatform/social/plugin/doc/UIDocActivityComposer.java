@@ -64,7 +64,8 @@ import org.exoplatform.webui.cssfile.CssClassUtils;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.form.UIFormStringInput;
-
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 /**
  * The templateParamsProcessor to process an activity. Replace template
  * key by template value in activity's title.
@@ -83,9 +84,11 @@ import org.exoplatform.webui.form.UIFormStringInput;
   }
 )
 public class UIDocActivityComposer extends UIActivityComposer implements UISelectable {
+  private static final Log LOG = ExoLogger.getLogger(UIDocActivityComposer.class);
   public static final String REPOSITORY = "repository";
   public static final String WORKSPACE = "collaboration";
   private static final String FILE_SPACES = "files:spaces";
+  private static final String CONTENT_SPACES         = "contents:spaces";
   private final static String POPUP_COMPOSER = "UIPopupComposer";
   private final String docActivityTitle = "<a href=\"${"+ UIDocActivity.DOCLINK +"}\">" + "${" +UIDocActivity.DOCNAME +"}</a>";
 
@@ -258,8 +261,17 @@ public class UIDocActivityComposer extends UIActivityComposer implements UISelec
     Node node = getDocNode(activityParams.get(UIDocActivity.REPOSITORY), activityParams.get(UIDocActivity.WORKSPACE), 
                            activityParams.get(UIDocActivity.DOCPATH));
     String activity_type = ACTIVITY_TYPE;
-    if(node.getPrimaryNodeType().getName().equals(NodetypeConstant.NT_FILE)) {
+    if (node.isNodeType(NodetypeConstant.EXO_SYMLINK)) {
+      try {
+        node = Utils.getNodeSymLink(node);
+      } catch (Exception e) {
+        LOG.error("Unknown error when getting the real node from symlink", e);
+      }
+    }
+    if (node.getPrimaryNodeType().getName().equals(NodetypeConstant.NT_FILE)) {
       activity_type = FILE_SPACES;
+    } else if (node.isNodeType(NodetypeConstant.EXO_ACCESSIBLE_MEDIA)) {
+      activity_type = CONTENT_SPACES;
     }
     String remoteUser = ConversationState.getCurrent().getIdentity().getUserId();
     Identity userIdentity = identityManager.getOrCreateIdentity(OrganizationIdentityProvider.NAME, remoteUser, true);
