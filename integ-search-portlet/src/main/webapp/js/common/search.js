@@ -218,11 +218,13 @@ window.initSearch = function initSearch() {
           var projectName = result.projectName ? result.projectName : '';
           var priority = result.priority ? result.priority : '';
           var dueDate = result.dueDate ? result.dueDate : '';
+          var $encoder = $('<div></div>');
           
-          var detail = TASK_IN_TASKS_DETAIL_TEMPLATE.replace(/%{projectName}/g, projectName);
+          var detail = TASK_IN_TASKS_DETAIL_TEMPLATE.replace(/%{projectName}/g, $encoder.text(projectName).html());
           detail = detail.replace(/%{priority}/g, priority);
           detail = detail.replace(/%{dueDate}/g, dueDate);
           result.detail = detail;
+          result.title = $encoder.text(result.title || '').html();
           //
           var doneClass = result.completed ? 'uiIcon40x40TickBlue' : '';
           avatar = TASK_IN_TASKS_AVATAR_TEMPLATE.replace(/%{done}/g, doneClass);

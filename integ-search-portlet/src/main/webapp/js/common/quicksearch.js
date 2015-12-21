@@ -277,7 +277,9 @@ window.initQuickSearch = function initQuickSearch(portletId,seeAllMsg, noResultM
           
         case "tasksInTasks":
           var cssClass = "uiIconTick" + (result.completed ? ' uiIconBlue' : '');
-          line = LINE_RESULT_TEMPLATE.replace(/%{cssClass}/g, cssClass);  
+          line = LINE_RESULT_TEMPLATE.replace(/%{cssClass}/g, cssClass);
+          var $encoder = $('<div></div>');
+          result.title = $encoder.text((result.title || '')).html();
           break;
 
         case "file":
