@@ -105,6 +105,16 @@ public class WikiSpaceActivityPublisher extends PageWikiListener {
       }
       activity = createNewActivity(ownerIdentity.getId());
     }
+    
+    if (PageUpdateType.MOVE_PAGE.equals(activityType)) {
+      // Delete activity of old location
+      if(page.getActivityId() != null) {
+      activityManager.deleteActivity(page.getActivityId());
+      }
+      // Add new activity of new location
+      activity = createNewActivity(ownerIdentity.getId());
+      isNewActivity = true;
+    }
     activity.setTitle(page.getTitle());
     // Add UI params
     Map<String, String> templateParams = new HashMap<>();
@@ -146,12 +156,9 @@ public class WikiSpaceActivityPublisher extends PageWikiListener {
     activity.setTemplateParams(templateParams);
     
     // Save activity
-    if (isNewActivity) {
+    if (isNewActivity || PageUpdateType.MOVE_PAGE.equals(activityType)) {
       activityManager.saveActivityNoReturn(ownerStream, activity);
     } else {
-      if (PageUpdateType.MOVE_PAGE.equals(activityType)) {
-        activity.setStreamOwner(ownerStream.getRemoteId());
-      }
       activityManager.updateActivity(activity);
     }
     
@@ -386,6 +393,10 @@ public class WikiSpaceActivityPublisher extends PageWikiListener {
     
     // Not raise the activity in case of user space
     if (PortalConfig.USER_TYPE.equals(wikiType)) {
+      if(PageUpdateType.MOVE_PAGE.equals(activityType) && page.getActivityId() != null) {
+        ActivityManager activityManager = PortalContainer.getInstance().getComponentInstanceOfType(ActivityManager.class);
+        activityManager.deleteActivity(page.getActivityId());
+      }
       return;
     }
     
