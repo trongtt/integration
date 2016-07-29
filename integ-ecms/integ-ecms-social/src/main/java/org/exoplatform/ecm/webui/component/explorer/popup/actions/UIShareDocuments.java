@@ -21,9 +21,14 @@ import org.exoplatform.ecm.utils.permission.PermissionUtil;
 import org.exoplatform.ecm.webui.component.explorer.UIJCRExplorer;
 import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.cms.impl.Utils;
+import org.exoplatform.services.jcr.access.AccessControlEntry;
 import org.exoplatform.services.jcr.access.PermissionType;
+import org.exoplatform.services.jcr.core.ExtendedNode;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
+import org.exoplatform.services.organization.Group;
+import org.exoplatform.services.organization.OrganizationService;
+import org.exoplatform.services.organization.User;
 import org.exoplatform.services.resources.ResourceBundleService;
 import org.exoplatform.services.wcm.core.NodeLocation;
 import org.exoplatform.services.wcm.utils.WCMCoreUtils;
@@ -51,8 +56,10 @@ import org.exoplatform.webui.form.UIFormTextAreaInput;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.Set;
 
 /**
  * Created by The eXo Platform SAS
@@ -210,8 +217,8 @@ public class UIShareDocuments extends UIForm implements UIPopupComponent{
     return arr[arr.length - 1];
   }
 
-  public Node getNode(){
-    return NodeLocation.getNodeByLocation(this.node);
+  public ExtendedNode getNode(){
+    return (ExtendedNode)NodeLocation.getNodeByLocation(this.node);
   }
 
   public String getFileExtension(){
@@ -256,6 +263,48 @@ public class UIShareDocuments extends UIForm implements UIPopupComponent{
     if(this.comment == null) return "";
     return this.comment;
   }
+
+  public Set<String> getWhoHasAccess() {
+    Set<String> set = new HashSet<String>();
+    try {
+      for (AccessControlEntry t : getNode().getACL().getPermissionEntries()) {
+        set.add(t.getIdentity());
+      }
+    } catch (Exception e) {
+      LOG.error(e.getMessage(), e);
+      return null;
+    }
+  return set;
+  }
+
+  public boolean canEdit(String username) {
+    try {
+      return getNode().getACL().getPermissions(username).contains("add_node")
+              && getNode().getACL().getPermissions(username).contains("set_property");
+    } catch (Exception e) {
+      LOG.error(e.getMessage(), e);
+      return false;
+    }
+  }
+
+  private boolean isSpace(String name) {
+      return name.startsWith("*:/");
+  }
+
+  public String getPrettySpaceName(String name) {
+    String[] space = name.split("/");
+    return space[space.length-1];
+  }
+
+  public boolean isOwner(String username) {
+    try {
+      return username.equals(getNode().getACL().getOwner());
+    } catch (Exception e) {
+      LOG.error(e.getMessage(), e);
+      return false;
+    }
+  }
+
   @Override
   public void activate() {  }
   @Override
