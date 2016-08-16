@@ -33,6 +33,7 @@ import org.exoplatform.social.core.space.model.Space;
 import org.exoplatform.social.core.space.spi.SpaceService;
 import org.exoplatform.wcm.ext.component.document.service.IShareDocumentService;
 import org.exoplatform.web.application.ApplicationMessage;
+import org.exoplatform.web.application.RequestContext;
 import org.exoplatform.webui.commons.EventUIComponent;
 import org.exoplatform.webui.commons.EventUIComponent.EVENTTYPE;
 import org.exoplatform.webui.commons.UISpacesSwitcher;
@@ -40,7 +41,6 @@ import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.UIPopupComponent;
-import org.exoplatform.webui.core.UIPopupContainer;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.core.model.SelectItemOption;
 import org.exoplatform.webui.event.Event;
@@ -48,7 +48,9 @@ import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.form.UIForm;
 import org.exoplatform.webui.form.UIFormSelectBox;
+import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.UIFormTextAreaInput;
+import org.exoplatform.ecm.webui.component.explorer.popup.actions.UIUserInvitation;
 
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
@@ -176,13 +178,15 @@ public class UIShareDocuments extends UIForm implements UIPopupComponent{
   public String comment = "";
   private NodeLocation node;
 
-  public UIShareDocuments(){ }
+  public UIShareDocuments() {
+  }
 
-  public void init(){
+  public void init() {
     try {
-      addChild(createUIComponent(UIShareDocumentSpaceMention.class, null, null));
-      EventUIComponent temp = new EventUIComponent("UIShareDocuments","SelectSpace",EVENTTYPE.EVENT);
-      getSpace().init(temp);
+      addChild(UIUserInvitation.class, null, null);
+      addChild(createUIComponent(UIWhoHasAccess.class, null, null));
+//      EventUIComponent temp = new EventUIComponent("UIShareDocuments","SelectSpace",EVENTTYPE.EVENT);
+//      getSpace().init(temp);
 
       addChild(new UIFormTextAreaInput("textAreaInput", "textAreaInput", ""));
       ResourceBundleService resourceBundleService = WCMCoreUtils.getService(ResourceBundleService.class);
@@ -284,6 +288,10 @@ public class UIShareDocuments extends UIForm implements UIPopupComponent{
     }
   }
 
+  public String getPermission(String username) {
+    return canEdit(username) ? SHARE_PERMISSION_MODIFY : SHARE_PERMISSION_VIEW;
+  }
+
   private boolean isSpace(String name) {
       return name.startsWith("*:/");
   }
@@ -300,6 +308,15 @@ public class UIShareDocuments extends UIForm implements UIPopupComponent{
       LOG.error(e.getMessage(), e);
       return false;
     }
+  }
+
+  public String getRestURL() {
+    StringBuilder builder = new StringBuilder();
+    builder.append("/").append(PortalContainer.getCurrentRestContextName()).append("/social/people/suggest.json?");
+    builder.append("currentUser=").append(RequestContext.getCurrentInstance().getRemoteUser());
+    builder.append("&spaceURL=").append("test");
+    builder.append("&typeOfRelation=").append("user_to_invite");
+    return builder.toString();
   }
 
   @Override

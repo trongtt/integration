@@ -1,0 +1,24 @@
+<%
+import org.exoplatform.webui.core.UIComponent ;
+
+UIComponent uiParent = uicomponent.getParent() ;
+%>
+
+<a id="add"><strong>Who has access ?</strong></a>
+<div id="who">
+    <ul>
+    <% for (bean in uiParent.getWhoHasAccess()) { %>
+        <li>
+            <div class="accessSpaceMember clearfix" id="whoHasAccess" >
+                <% String name = uiParent.isSpace(bean) ? uiParent.getPrettySpaceName(bean) : bean; %>
+                <label class="pull-left">$name</label>
+                <% if (!uiParent.isSpace(bean) && uiParent.isOwner(bean)) { %>
+                    <label class="pull-right">owner</label>
+                    <% continue;
+                }
+                uicomponent.getIdentityName(bean);    %>
+            </div>
+        </li>
+    <% }  %>
+    </ul>
+</div>
