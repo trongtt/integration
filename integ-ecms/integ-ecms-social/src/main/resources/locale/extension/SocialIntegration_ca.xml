@@ -20,7 +20,7 @@
       <editedBy>va ser editat per</editedBy>
       <system>el sistema</system>
       <readmore>...Llegeix més.</readmore>
-      <editTitle>El títol ha estat actualitzat a: {0}</editTitle>
+      <editTitle>Title has been updated to: {0}</editTitle>
       <editName>El nom ha estat actualitzat a: {0}</editName>
       <editDescription>La descripció ha estat actualitzada a: {0}</editDescription>
       <singleCreator>L'autor es {0}</singleCreator>
@@ -70,21 +70,21 @@
       <obsolete>Obsolet</obsolete>
       <unpublished>No publicat</unpublished>
       <draft>Esborrany</draft>
-      <pending>Pendent</pending>
-      <approved>Aprovat</approved>
+      <pending>Pending</pending>
+      <approved>Approved</approved>
       <inreview>En  revisió</inreview>
       <staged>Llest per publicar</staged>
       <published>Publicat</published>
-      <live>Publicat</live>
+      <live>Published</live>
     </publicationStates>
-    <view>Veure</view>
-    <edit>Edita</edit>
+    <view>View</view>
+    <edit>Edit</edit>
     <download>Descarrega</download>
   </SocialIntegration>
   <UIPopupWindow>
     <title>
-      <DocViewer>Vista prèvia</DocViewer>
-      <UIReadOnlyFileConfirmMessage>Obre el Document</UIReadOnlyFileConfirmMessage>
+      <DocViewer>Preview</DocViewer>
+      <UIReadOnlyFileConfirmMessage>Open Document</UIReadOnlyFileConfirmMessage>
     </title>
   </UIPopupWindow>
   <ElementSet>
@@ -96,7 +96,7 @@
   </ElementSet>
   <UIPreviewCommentArea>
     <label>
-      <commentTextAreaPreview>Afegeix el teu comentari...</commentTextAreaPreview>
+      <commentTextAreaPreview>Add your comment...</commentTextAreaPreview>
       <no-comment-yet>Encara no hi han comentaris</no-comment-yet>
     </label>
   </UIPreviewCommentArea>
@@ -118,23 +118,23 @@
   </UIPopupMenu>
 <ECMContextMenu>
 <event>
-<ShareDocuments>Compartir</ShareDocuments>
+<ShareDocuments>Share</ShareDocuments>
 </event>
 </ECMContextMenu>
 <UIPopupWindow>
 <title>
-<UIShareDocuments>Compartir</UIShareDocuments>
-<Share>Compartir</Share>
+<UIShareDocuments>Share</UIShareDocuments>
+<Share>Share</Share>
 </title>
 </UIPopupWindow>
 <UIShareDocuments>
 <label>
-<ShareButton>Compartir</ShareButton>
-<CancelButton>Cancel·la</CancelButton>
+<ShareButton>Share</ShareButton>
+<CancelButton>Cancel</CancelButton>
 <TextAreaInit>Afegeix un comentari sobre aquest fitxer...</TextAreaInit>
 <ShareWith>Compartir amb:</ShareWith>
 <Access>Accés</Access>
-<SpaceMember>Membres del Espai</SpaceMember>
+<SpaceMember>Space Members</SpaceMember>
 <SelectASpace>Selecciona un espai</SelectASpace>
 <SharedADocument>compartit un document</SharedADocument>
 <NoSpace>Si us plau, selecciona almenys un espai per compartir</NoSpace>
@@ -147,7 +147,7 @@
 
 <UIActionBar>
 <tooltip>
-<ShareDocuments>Compartir</ShareDocuments>
+<ShareDocuments>Share</ShareDocuments>
 </tooltip>
 </UIActionBar>
 </bundle>
