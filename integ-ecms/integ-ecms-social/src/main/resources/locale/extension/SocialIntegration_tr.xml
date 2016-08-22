@@ -96,7 +96,7 @@
   </ElementSet>
   <UIPreviewCommentArea>
     <label>
-      <commentTextAreaPreview>Yorum ekle...</commentTextAreaPreview>
+      <commentTextAreaPreview>Add your comment...</commentTextAreaPreview>
       <no-comment-yet>Henüz yorum yok</no-comment-yet>
     </label>
   </UIPreviewCommentArea>
@@ -118,23 +118,23 @@
   </UIPopupMenu>
 <ECMContextMenu>
 <event>
-<ShareDocuments>Paylaş</ShareDocuments>
+<ShareDocuments>Share</ShareDocuments>
 </event>
 </ECMContextMenu>
 <UIPopupWindow>
 <title>
-<UIShareDocuments>Paylaş</UIShareDocuments>
-<Share>Paylaş</Share>
+<UIShareDocuments>Share</UIShareDocuments>
+<Share>Share</Share>
 </title>
 </UIPopupWindow>
 <UIShareDocuments>
 <label>
-<ShareButton>Paylaş</ShareButton>
-<CancelButton>İptal</CancelButton>
+<ShareButton>Share</ShareButton>
+<CancelButton>Cancel</CancelButton>
 <TextAreaInit>Bu dosya ile ilgili bir yorum ekle...</TextAreaInit>
 <ShareWith>Paylaş:</ShareWith>
 <Access>Giriş</Access>
-<SpaceMember>Alan Üyeleri</SpaceMember>
+<SpaceMember>Space Members</SpaceMember>
 <SelectASpace>Bir Alan Seç</SelectASpace>
 <SharedADocument>bir belge paylaş</SharedADocument>
 <NoSpace>Lütfen paylaşmak için en az bir alan seçiniz</NoSpace>
@@ -147,7 +147,7 @@
 
 <UIActionBar>
 <tooltip>
-<ShareDocuments>Paylaş</ShareDocuments>
+<ShareDocuments>Share</ShareDocuments>
 </tooltip>
 </UIActionBar>
 </bundle>
