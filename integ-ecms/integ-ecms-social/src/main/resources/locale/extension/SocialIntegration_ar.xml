@@ -84,7 +84,7 @@
   <UIPopupWindow>
     <title>
       <DocViewer>معاينة</DocViewer>
-      <UIReadOnlyFileConfirmMessage>فتح الوثيقة</UIReadOnlyFileConfirmMessage>
+      <UIReadOnlyFileConfirmMessage>Open Document</UIReadOnlyFileConfirmMessage>
     </title>
   </UIPopupWindow>
   <ElementSet>
@@ -96,7 +96,7 @@
   </ElementSet>
   <UIPreviewCommentArea>
     <label>
-      <commentTextAreaPreview>أضف تعليقك...</commentTextAreaPreview>
+      <commentTextAreaPreview>Add your comment...</commentTextAreaPreview>
       <no-comment-yet>لا تعليق حتى الآن</no-comment-yet>
     </label>
   </UIPreviewCommentArea>
@@ -118,23 +118,23 @@
   </UIPopupMenu>
 <ECMContextMenu>
 <event>
-<ShareDocuments>شارك</ShareDocuments>
+<ShareDocuments>Share</ShareDocuments>
 </event>
 </ECMContextMenu>
 <UIPopupWindow>
 <title>
-<UIShareDocuments>شارك</UIShareDocuments>
-<Share>شارك</Share>
+<UIShareDocuments>Share</UIShareDocuments>
+<Share>Share</Share>
 </title>
 </UIPopupWindow>
 <UIShareDocuments>
 <label>
-<ShareButton>شارك</ShareButton>
-<CancelButton>الغاء</CancelButton>
+<ShareButton>Share</ShareButton>
+<CancelButton>Cancel</CancelButton>
 <TextAreaInit>إضافة تعليق بخصوص هذا الملف...</TextAreaInit>
 <ShareWith>مشاركة مع:</ShareWith>
 <Access>الوصول</Access>
-<SpaceMember>أعضاء الفضاء</SpaceMember>
+<SpaceMember>Space Members</SpaceMember>
 <SelectASpace>اختيار فضاء</SelectASpace>
 <SharedADocument>مشاركة وثيقة</SharedADocument>
 <NoSpace>الرجاء اختيارعلى الأقل فضاء واحد قصد المشاركة</NoSpace>
@@ -147,7 +147,7 @@
 
 <UIActionBar>
 <tooltip>
-<ShareDocuments>شارك</ShareDocuments>
+<ShareDocuments>Share</ShareDocuments>
 </tooltip>
 </UIActionBar>
 </bundle>
