@@ -96,7 +96,7 @@
   </ElementSet>
   <UIPreviewCommentArea>
     <label>
-      <commentTextAreaPreview>Aggiungi il tuo commento...</commentTextAreaPreview>
+      <commentTextAreaPreview>Add your comment...</commentTextAreaPreview>
       <no-comment-yet>Nessun commento</no-comment-yet>
     </label>
   </UIPreviewCommentArea>
@@ -118,23 +118,23 @@
   </UIPopupMenu>
 <ECMContextMenu>
 <event>
-<ShareDocuments>Condividi</ShareDocuments>
+<ShareDocuments>Share</ShareDocuments>
 </event>
 </ECMContextMenu>
 <UIPopupWindow>
 <title>
-<UIShareDocuments>Condividi</UIShareDocuments>
-<Share>Condividi</Share>
+<UIShareDocuments>Share</UIShareDocuments>
+<Share>Share</Share>
 </title>
 </UIPopupWindow>
 <UIShareDocuments>
 <label>
-<ShareButton>Condividi</ShareButton>
-<CancelButton>Annulla</CancelButton>
+<ShareButton>Share</ShareButton>
+<CancelButton>Cancel</CancelButton>
 <TextAreaInit>Aggiungi un commento su questo file...</TextAreaInit>
 <ShareWith>Condividi con:</ShareWith>
 <Access>Accedi</Access>
-<SpaceMember>Membri dello spazio</SpaceMember>
+<SpaceMember>Space Members</SpaceMember>
 <SelectASpace>Seleziona uno spazio</SelectASpace>
 <SharedADocument>condiviso un documento</SharedADocument>
 <NoSpace>Seleziona almeno uno spazio da condividere</NoSpace>
@@ -147,7 +147,7 @@
 
 <UIActionBar>
 <tooltip>
-<ShareDocuments>Condividi</ShareDocuments>
+<ShareDocuments>Share</ShareDocuments>
 </tooltip>
 </UIActionBar>
 </bundle>
