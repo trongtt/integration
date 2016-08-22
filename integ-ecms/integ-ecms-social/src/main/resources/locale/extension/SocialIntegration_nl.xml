@@ -41,7 +41,7 @@
       <removeTitle>Titel is verwijderd.</removeTitle>
       <removeName>Naam is verwijderd.</removeName>
       <removeSummary>Samenvatting is verwijderd.</removeSummary>
-      <removeDescription>Beschrijving is verwijderd.</removeDescription>
+      <removeDescription>Description has been removed.</removeDescription>
       <removeCreator>Maker: {0} is verwijderd.</removeCreator>
       <removeMultiCreator>Makers: {0} zijn verwijderd.</removeMultiCreator>
       <removeLanguage>Taal is verwijderd.</removeLanguage>
@@ -71,15 +71,15 @@
       <unpublished>UnPublished</unpublished>
       <draft>Ontwerp</draft>
       <pending>In behandeling</pending>
-      <approved>Goedgekeurd</approved>
+      <approved>Approved</approved>
       <inreview>In Review</inreview>
       <staged>Geënsceneerd</staged>
       <published>Gepubliceerd</published>
       <live>Gepubliceerd</live>
     </publicationStates>
     <view>Tonen</view>
-    <edit>Bewerken</edit>
-    <download>Downloaden</download>
+    <edit>Edit</edit>
+    <download>Download</download>
   </SocialIntegration>
   <UIPopupWindow>
     <title>
@@ -118,23 +118,23 @@
   </UIPopupMenu>
 <ECMContextMenu>
 <event>
-<ShareDocuments>Delen</ShareDocuments>
+<ShareDocuments>Share</ShareDocuments>
 </event>
 </ECMContextMenu>
 <UIPopupWindow>
 <title>
-<UIShareDocuments>Delen</UIShareDocuments>
-<Share>Delen</Share>
+<UIShareDocuments>Share</UIShareDocuments>
+<Share>Share</Share>
 </title>
 </UIPopupWindow>
 <UIShareDocuments>
 <label>
-<ShareButton>Delen</ShareButton>
-<CancelButton>Annuleren</CancelButton>
+<ShareButton>Share</ShareButton>
+<CancelButton>Cancel</CancelButton>
 <TextAreaInit>Een opmerking aan dit bestand toevoegen...</TextAreaInit>
 <ShareWith>Delen met:</ShareWith>
 <Access>Toegang</Access>
-<SpaceMember>Ruimte leden</SpaceMember>
+<SpaceMember>Space Members</SpaceMember>
 <SelectASpace>Selecteer een ruimte</SelectASpace>
 <SharedADocument>deelde een document</SharedADocument>
 <NoSpace>Selecteer ten minste één ruimte om te delen</NoSpace>
@@ -147,7 +147,7 @@
 
 <UIActionBar>
 <tooltip>
-<ShareDocuments>Delen</ShareDocuments>
+<ShareDocuments>Share</ShareDocuments>
 </tooltip>
 </UIActionBar>
 </bundle>
