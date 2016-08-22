@@ -41,7 +41,7 @@
       <removeTitle>Tytuł został usunięty.</removeTitle>
       <removeName>Nazwa została usunięta.</removeName>
       <removeSummary>Streszczenie została usunięte.</removeSummary>
-      <removeDescription>Opis został usunięty.</removeDescription>
+      <removeDescription>Description has been removed.</removeDescription>
       <removeCreator>Twórca: {0} został usunięty.</removeCreator>
       <removeMultiCreator>Twórcy: {0} zostali usunięci.</removeMultiCreator>
       <removeLanguage>Język został usunięty.</removeLanguage>
@@ -71,7 +71,7 @@
       <unpublished>Nieopublikowane</unpublished>
       <draft>Projekt</draft>
       <pending>Oczekuje</pending>
-      <approved>Zatwierdzony</approved>
+      <approved>Approved</approved>
       <inreview>W trakcie weryfikacji</inreview>
       <staged>Wystawione</staged>
       <published>Opublikowane</published>
@@ -79,7 +79,7 @@
     </publicationStates>
     <view>Zobacz</view>
     <edit>Edytuj</edit>
-    <download>Pobierz</download>
+    <download>Download</download>
   </SocialIntegration>
   <UIPopupWindow>
     <title>
@@ -96,7 +96,7 @@
   </ElementSet>
   <UIPreviewCommentArea>
     <label>
-      <commentTextAreaPreview>Dodaj swój komentarz...</commentTextAreaPreview>
+      <commentTextAreaPreview>Add your comment...</commentTextAreaPreview>
       <no-comment-yet>Jeszcze nie skomentowano</no-comment-yet>
     </label>
   </UIPreviewCommentArea>
@@ -118,23 +118,23 @@
   </UIPopupMenu>
 <ECMContextMenu>
 <event>
-<ShareDocuments>Udostępnij</ShareDocuments>
+<ShareDocuments>Share</ShareDocuments>
 </event>
 </ECMContextMenu>
 <UIPopupWindow>
 <title>
-<UIShareDocuments>Udostępnij</UIShareDocuments>
-<Share>Udostępnij</Share>
+<UIShareDocuments>Share</UIShareDocuments>
+<Share>Share</Share>
 </title>
 </UIPopupWindow>
 <UIShareDocuments>
 <label>
-<ShareButton>Udostępnij</ShareButton>
-<CancelButton>Anuluj</CancelButton>
+<ShareButton>Share</ShareButton>
+<CancelButton>Cancel</CancelButton>
 <TextAreaInit>Dodaj komentarz do tego pliku ...</TextAreaInit>
 <ShareWith>Udostępnij:</ShareWith>
 <Access>Dostęp</Access>
-<SpaceMember>Członek przestrzeni</SpaceMember>
+<SpaceMember>Space Members</SpaceMember>
 <SelectASpace>Wybierz obszar</SelectASpace>
 <SharedADocument>dokument udostępniony</SharedADocument>
 <NoSpace>Wybierz co najmniej jeden obszar do udostępniania</NoSpace>
@@ -147,7 +147,7 @@
 
 <UIActionBar>
 <tooltip>
-<ShareDocuments>Udostępnij</ShareDocuments>
+<ShareDocuments>Share</ShareDocuments>
 </tooltip>
 </UIActionBar>
 </bundle>
