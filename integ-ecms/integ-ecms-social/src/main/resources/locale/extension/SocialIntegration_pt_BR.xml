@@ -84,7 +84,7 @@
   <UIPopupWindow>
     <title>
       <DocViewer>Pré-visualizar</DocViewer>
-      <UIReadOnlyFileConfirmMessage>Abrir documento</UIReadOnlyFileConfirmMessage>
+      <UIReadOnlyFileConfirmMessage>Open Document</UIReadOnlyFileConfirmMessage>
     </title>
   </UIPopupWindow>
   <ElementSet>
@@ -96,7 +96,7 @@
   </ElementSet>
   <UIPreviewCommentArea>
     <label>
-      <commentTextAreaPreview>Adicione seu comentário...</commentTextAreaPreview>
+      <commentTextAreaPreview>Add your comment...</commentTextAreaPreview>
       <no-comment-yet>Nenhum comentário ainda</no-comment-yet>
     </label>
   </UIPreviewCommentArea>
@@ -118,23 +118,23 @@
   </UIPopupMenu>
 <ECMContextMenu>
 <event>
-<ShareDocuments>Compartilhar</ShareDocuments>
+<ShareDocuments>Share</ShareDocuments>
 </event>
 </ECMContextMenu>
 <UIPopupWindow>
 <title>
-<UIShareDocuments>Compartilhar</UIShareDocuments>
-<Share>Compartilhar</Share>
+<UIShareDocuments>Share</UIShareDocuments>
+<Share>Share</Share>
 </title>
 </UIPopupWindow>
 <UIShareDocuments>
 <label>
-<ShareButton>Compartilhar</ShareButton>
-<CancelButton>Cancelar</CancelButton>
+<ShareButton>Share</ShareButton>
+<CancelButton>Cancel</CancelButton>
 <TextAreaInit>Adicione um comentário sobre este arquivo...</TextAreaInit>
 <ShareWith>Compartilhar com:</ShareWith>
 <Access>Acessar</Access>
-<SpaceMember>Membros do Espaço</SpaceMember>
+<SpaceMember>Space Members</SpaceMember>
 <SelectASpace>Selecione um espaço</SelectASpace>
 <SharedADocument>compartilhou um documento</SharedADocument>
 <NoSpace>Selecione pelo menos um espaço para compartilhar</NoSpace>
@@ -147,7 +147,7 @@
 
 <UIActionBar>
 <tooltip>
-<ShareDocuments>Compartilhar</ShareDocuments>
+<ShareDocuments>Share</ShareDocuments>
 </tooltip>
 </UIActionBar>
 </bundle>
